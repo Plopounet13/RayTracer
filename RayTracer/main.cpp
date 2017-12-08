@@ -55,12 +55,7 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	clock_t t;
-	t = clock();
-	s.render("/Users/lois/Documents/M2/MMSI/test.png", 10, 5);
-	t = clock() - t;
-	float time = (float)t / CLOCKS_PER_SEC;
-	std::cout << "Rendu calculé en " << time << " secondes." << std::endl;
+	s.render("../test.png", 10, 5);
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
