@@ -44,8 +44,8 @@ int main(int argc, const char * argv[]) {
 	
 	obj.push_back(new Sphere(Vec3(-1060, 0, 0), 1000, new DiffuseMat(Vec3(0.2, 0., 0.2))));
 	
-	//obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new DiffuseMat(Vec3(.9, .9, .9))));
-	std::vector<Vec3> sommets(3);
+	obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new SpecularMat(Vec3(0.4, 0.4, 0.4), Vec3(0.2, 0.2, 0.2))));
+	/*std::vector<Vec3> sommets(3);
 	sommets[0] = Vec3(0., -10., 20.);
 	sommets[1] = Vec3(10., 10., 20.);
 	sommets[2] = Vec3(-10., 10., 20.);
@@ -60,8 +60,8 @@ int main(int argc, const char * argv[]) {
 	normFace[1] = 0;
 	normFace[2] = 0;
 
-	//obj.push_back(new Mesh(sommets, normales, faces, normFace, new DiffuseMat(Vec3(.9, .9, .9))));
-	obj.push_back(new Mesh("DeerNormals.obj", 0.05, Vec3(0, -10, 20), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.9, .9, .9))));
+	obj.push_back(new Mesh(sommets, normales, faces, normFace, new DiffuseMat(Vec3(.9, .9, .9))));*/
+	//obj.push_back(new Mesh("DeerNormals.obj", 0.05, Vec3(0, -10, 20), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.8, .8, .8))));
 	
 	std::vector<Light> l;
 	l.emplace_back(Vec3(-10, 20, 40), Vec3(1.5, 1.5, 1.5));
@@ -72,7 +72,7 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	s.render("../test.png", 1, 0);
+	s.render("../Specsphere1000s5r.png", 1000, 5);
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){

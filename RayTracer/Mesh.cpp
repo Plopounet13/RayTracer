@@ -15,7 +15,16 @@
 
 Mesh::Mesh(){}
 
-Mesh::Mesh(const std::vector<Vec3>& sommets, const std::vector<Vec3>& normales, const std::vector<int>& faces, const std::vector<int>& normalesFace, Material* m) :Object(m), sommets(sommets), normales(normales), faces(faces), normalesFace(normalesFace){}
+Mesh::Mesh(const std::vector<Vec3>& sommets, const std::vector<Vec3>& normales, const std::vector<int>& faces, const std::vector<int>& normalesFace, Material* m) :Object(m), sommets(sommets), normales(normales), faces(faces), normalesFace(normalesFace){
+	
+	smoothNormales.resize(sommets.size());
+	for (int i = 0; i < normalesFace.size(); ++i){
+		smoothNormales[faces[i]] += normales[normalesFace[i]];
+	}
+	for (auto& n:smoothNormales){
+		n.normalize();
+	}
+}
 
 void Mesh::readFromObj(const std::string& filename){
 	std::ifstream in(filename);
@@ -125,9 +134,9 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter) const {
 	inter.fromDir = -ray.direction;
 	inter.obj = this;
 	
-	Vec3 na = smoothNormales[faces[3*i]];
-	Vec3 nb = smoothNormales[faces[3*i + 1]];
-	Vec3 nc = smoothNormales[faces[3*i + 2]];
+	Vec3 na = smoothNormales[faces[3*i]]; //normales[normalesFace[3*i]]; //
+	Vec3 nb = smoothNormales[faces[3*i + 1]]; //normales[normalesFace[3*i + 1]]; //
+	Vec3 nc = smoothNormales[faces[3*i + 2]]; //normales[normalesFace[3*i + 2]]; //
 	
 	inter.norm = normalInterpol(u, v, na, nb, nc);
 	
