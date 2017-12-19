@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <random>
+#include <algorithm>
 #include "Scene.hpp"
 #include "Material.hpp"
 #include "Ray.hpp"
@@ -28,6 +29,8 @@ DiffuseMat::DiffuseMat(const Vec3& c){
 
 Vec3 DiffuseMat::getCol(const Scene& s, const Intersection& inter, bool indirect, int nbRecur) const{
 	
+	if (color == Vec3(.9, .9, .9))
+		int a = 0;
 	Vec3 col(0., 0., 0.);
 	
 	for (auto& l : s.lights){

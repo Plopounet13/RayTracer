@@ -106,6 +106,13 @@ Vec3 operator* (const Vec3& v, const double& s){
 	return s * v;
 }
 
+const Vec3& operator*= (Vec3& v, const double& s){
+	v.x *= s;
+	v.y *= s;
+	v.z *= s;
+	return v;
+}
+
 Vec3 operator/ (const Vec3& v, const double& s){
 	return Vec3(v.x / s, v.y / s, v.z / s);
 }
@@ -125,4 +132,11 @@ Vec3 mult(const Vec3& a, const Vec3& b){
 	return Vec3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
+bool operator== (const Vec3& a, const Vec3& b){
+	return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+bool operator!= (const Vec3& a, const Vec3& b){
+	return !(a == b);
+}
 

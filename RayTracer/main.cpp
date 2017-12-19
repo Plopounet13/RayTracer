@@ -19,6 +19,7 @@
 #include "Light.hpp"
 #include "Material.hpp"
 #include "Scene.hpp"
+#include "Mesh.hpp"
 
 #include "utilities.hpp"
 
@@ -28,23 +29,39 @@ int main(int argc, const char * argv[]) {
 	
 	engine.seed((unsigned int)clock());
 	
-	Camera c(Vec3(0, 0, 55), Vec3(0, 0, -1), Vec3(0, 1, 0), 400, 320);
+	Camera c(Vec3(0, 0, 55), Vec3(0, 0, -1), Vec3(0, 1, 0), 600, 480);
 	
 	std::vector<Object*> obj;
 	obj.push_back(new Sphere(Vec3(0, 0, -1060), 1000, new DiffuseMat(Vec3(0., 0.2, 0.))));
-	;
+	
 	obj.push_back(new Sphere(Vec3(0, -1010, 0), 1000, new DiffuseMat(Vec3(0.07, 0.07, 0.5))));
-	;
+	
 	obj.push_back(new Sphere(Vec3(0, 1060, 0), 1000, new DiffuseMat(Vec3(0.2, 0., 0.))));
-	;
+	
 	obj.push_back(new Sphere(Vec3(0, 0, 1060), 1000, new DiffuseMat(Vec3(.8, .8, .8))));
-	;
+	
 	obj.push_back(new Sphere(Vec3(1060, 0, 0), 1000, new DiffuseMat(Vec3(0.2, 0.2, 0.))));
-	;
+	
 	obj.push_back(new Sphere(Vec3(-1060, 0, 0), 1000, new DiffuseMat(Vec3(0.2, 0., 0.2))));
-	;
-	obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new DiffuseMat(Vec3(.9, .9, .9))));
-	;
+	
+	//obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new DiffuseMat(Vec3(.9, .9, .9))));
+	std::vector<Vec3> sommets(3);
+	sommets[0] = Vec3(0., -10., 20.);
+	sommets[1] = Vec3(10., 10., 20.);
+	sommets[2] = Vec3(-10., 10., 20.);
+	std::vector<Vec3> normales(1);
+	normales[0] = Vec3(0., 0., 1.);
+	std::vector<int> faces(3);
+	faces[0] = 0;
+	faces[1] = 1;
+	faces[2] = 2;
+	std::vector<int> normFace(3);
+	normFace[0] = 0;
+	normFace[1] = 0;
+	normFace[2] = 0;
+
+	//obj.push_back(new Mesh(sommets, normales, faces, normFace, new DiffuseMat(Vec3(.9, .9, .9))));
+	obj.push_back(new Mesh("DeerNormals.obj", 0.05, Vec3(0, -10, 20), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.9, .9, .9))));
 	
 	std::vector<Light> l;
 	l.emplace_back(Vec3(-10, 20, 40), Vec3(1.5, 1.5, 1.5));
@@ -55,7 +72,7 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	s.render("../test.png", 10, 5);
+	s.render("../test.png", 1, 0);
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){

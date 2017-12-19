@@ -5,11 +5,11 @@
 	<key>BuildLocationStyle</key>
 	<string>CustomLocation</string>
 	<key>CustomBuildIntermediatesPath</key>
-	<string>Build/Intermediates</string>
+	<string>/Users/lois/Documents/M2/MMSI/RayTracer/Build</string>
 	<key>CustomBuildLocationType</key>
-	<string>RelativeToWorkspace</string>
+	<string>Absolute</string>
 	<key>CustomBuildProductsPath</key>
-	<string>Build/Products</string>
+	<string>/Users/lois/Documents/M2/MMSI/RayTracer/RayTracer/</string>
 	<key>DerivedDataLocationStyle</key>
 	<string>Default</string>
 	<key>IssueFilterStyle</key>

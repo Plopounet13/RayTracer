@@ -288,6 +288,7 @@
 		E3AFB6201FADD12E003B38F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				OTHER_LDFLAGS = (
 					"-L/usr/local/opt/llvm/lib",
 					"-I/usr/local/opt/llvm/include",
@@ -300,6 +301,7 @@
 		E3AFB6211FADD12E003B38F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				OTHER_LDFLAGS = (
 					"-L/usr/local/opt/llvm/lib",
 					"-I/usr/local/opt/llvm/include",
