@@ -1,7 +1,7 @@
 RayTracer/Makefile
 RayTracer/*.o
 Build/*
-RayTracer.xcode/*
+RayTracer.xcode*
 
 RayTracer/RayTracer
 RayTracer/renderer
