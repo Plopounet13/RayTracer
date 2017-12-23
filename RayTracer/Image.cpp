@@ -8,6 +8,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <cmath>
 #include "utilities.hpp"
 #include "Image.hpp"
 
@@ -57,6 +58,11 @@ void Image::store(int i, int j, const Vec3& v){
 	blue(i, j) = v.z;
 }
 
+float gammaCorrection(float v){
+	static float gamma = 1.f / 2.2f;
+	return std::pow(v, gamma);
+}
+
 void Image::save(const std::string& filename) const{
 	
 	unsigned char *img = NULL;
@@ -68,9 +74,9 @@ void Image::save(const std::string& filename) const{
 		for(int j = 0; j < height; ++j) {
 			int x = i;
 			int y = (height-1) - j;
-			float r = clamp(red(i, j) * 255, 0.f, 255.f);
-			float g = clamp(green(i, j) * 255, 0.f, 255.f);
-			float b = clamp(blue(i, j) * 255, 0.f, 255.f);
+			float r = clamp(gammaCorrection(red(i, j)) * 255, 0.f, 255.f);
+			float g = clamp(gammaCorrection(green(i, j)) * 255, 0.f, 255.f);
+			float b = clamp(gammaCorrection(blue(i, j)) * 255, 0.f, 255.f);
 			img[(x + y * width) * 3 + 2] = (unsigned char)(r);
 			img[(x + y * width) * 3 + 1]  = (unsigned char)(g);
 			img[(x + y * width) * 3 + 0]  = (unsigned char)(b);

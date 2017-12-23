@@ -2,3 +2,7 @@ RayTracer/Makefile
 RayTracer/*.o
 Build/*
 RayTracer.xcode/*
+
+RayTracer/RayTracer
+
+test.png
