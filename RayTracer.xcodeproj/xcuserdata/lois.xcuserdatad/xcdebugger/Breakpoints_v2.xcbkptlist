@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RayTracer/Material.cpp"
-            timestampString = "534939030.481485"
+            timestampString = "535706370.369459"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "DiffuseMat::getCol(const Scene&amp; s, const Intersection&amp; inter, bool indirect, int nbRecur)"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RayTracer/Material.cpp"
-            timestampString = "534939030.481485"
+            timestampString = "535706370.369459"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "TransparentMat::getCol(const Scene&amp; s, const Intersection&amp; inter, bool indirect, int nbRecur)"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,22 +190,6 @@
             startingLineNumber = "202"
             endingLineNumber = "202"
             landmarkName = "Mesh::intersect(const Ray&amp; r, Intersection&amp; inter)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RayTracer/Material.cpp"
-            timestampString = "534939030.481485"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "33"
-            endingLineNumber = "33"
-            landmarkName = "DiffuseMat::getCol(const Scene&amp; s, const Intersection&amp; inter, bool indirect, int nbRecur)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
