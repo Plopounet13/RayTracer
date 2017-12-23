@@ -172,9 +172,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "Mesh::intersectTriangle(const Ray &amp;ray, int i, Intersection&amp; inter)"
-            landmarkType = "7">
+            endingLineNumber = "93">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -188,9 +186,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "202"
-            endingLineNumber = "202"
-            landmarkName = "Mesh::intersect(const Ray&amp; r, Intersection&amp; inter)"
-            landmarkType = "7">
+            endingLineNumber = "202">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -204,9 +200,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "Mesh::Mesh(const std::string&amp; filename, double scale, const Vec3&amp; loc, const Vec3&amp; newX, const Vec3&amp; newY, const Vec3&amp; newZ, Material* m)"
-            landmarkType = "7">
+            endingLineNumber = "59">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -253,7 +247,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "21"
             endingLineNumber = "21"
-            landmarkName = "Mesh::readFromObj(const std::string&amp; filename)"
+            landmarkName = "Mesh::Mesh(const std::vector&lt;Vec3&gt;&amp; sommets, const std::vector&lt;Vec3&gt;&amp; normales, const std::vector&lt;int&gt;&amp; faces, const std::vector&lt;int&gt;&amp; normalesFace, Material* m)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -264,11 +258,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RayTracer/main.cpp"
-            timestampString = "534937587.633863"
+            timestampString = "535709256.93841"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "main(int argc, const char * argv[])"
             landmarkType = "9">
          </BreakpointContent>

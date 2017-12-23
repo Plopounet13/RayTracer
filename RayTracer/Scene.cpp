@@ -75,9 +75,9 @@ void Scene::render(std::string filename, int nbRay, int nbRecur) const{
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
 			Vec3 col;
-			Ray r = c.cast_Ray(i, j);
 			int k = 0;
 			do {
+				Ray r = c.cast_Ray(i, j);
 				col += getCol(r, indirect, nbRecur);
 			} while (++k < nbRay);
 			if (nbRay)
