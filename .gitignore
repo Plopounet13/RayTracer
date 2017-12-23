@@ -4,5 +4,6 @@ Build/*
 RayTracer.xcode/*
 
 RayTracer/RayTracer
+RayTracer/renderer
 
 test.png
