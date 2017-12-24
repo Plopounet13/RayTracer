@@ -12,6 +12,10 @@
 #include "Mesh.hpp"
 
 #define EPSILON 0.001
+//Comment to use naive intersectin computation
+#define MOLLER_TRUMBORE
+//Comment to use face normals instead of smooth ones
+#define SMOOTH_NORMALS
 
 Mesh::Mesh(){}
 
@@ -91,11 +95,15 @@ Vec3 normalInterpol(const float u, const float v, const Vec3& na, const Vec3& nb
 	return na * w + nb * u + nc * v;
 }
 
+//Moller Trumbore Algorithm code adapted from Jean-Claude Iehl code
+//Alternative code derived from intersection equation solving
 bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter) const {
 	
 	const Vec3& a = sommets[faces[i*3]];
 	const Vec3& b = sommets[faces[i*3+1]];
 	const Vec3& c = sommets[faces[i*3+2]];
+
+#ifdef MOLLER_TRUMBORE
 	/* begin calculating determinant - also used to calculate U parameter */
 	Vec3 ac = c - a;
 	Vec3 pvec = ray.direction ^ ac;
@@ -134,22 +142,98 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter) const {
 	inter.fromDir = -ray.direction;
 	inter.obj = this;
 	
-	Vec3 na = smoothNormales[faces[3*i]]; //normales[normalesFace[3*i]]; //
-	Vec3 nb = smoothNormales[faces[3*i + 1]]; //normales[normalesFace[3*i + 1]]; //
-	Vec3 nc = smoothNormales[faces[3*i + 2]]; //normales[normalesFace[3*i + 2]]; //
+#ifdef SMOOTH_NORMALS
+	Vec3 na = smoothNormales[faces[3*i]];
+	Vec3 nb = smoothNormales[faces[3*i + 1]];
+	Vec3 nc = smoothNormales[faces[3*i + 2]];
+#else
+	Vec3 na = normales[normalesFace[3*i]];
+	Vec3 nb = normales[normalesFace[3*i + 1]];
+	Vec3 nc = normales[normalesFace[3*i + 2]];
+#endif
 	
 	inter.norm = normalInterpol(u, v, na, nb, nc);
 	
 	// ne renvoie vrai que si l'intersection est valide (comprise entre tmin et tmax du rayon)
 	return true;
+#else
+	
+	Vec3 ab = b - a;
+	Vec3 ac = c - a;
+	
+	//Normale au plan du triangle
+	Vec3 N = normalize(ab ^ ac);
+	
+	//Composante du rayon selon la normale
+	double compDir = N * ray.direction;
+	
+	if (compDir == 0.){
+		return false;
+	}
+	
+	//Composante de l'origine du rayon selon la normale
+	double compPos = N * ray.origine;
+	
+	//Distance entre le plan et (0,0,0)
+	// N est la normale au plan donc tous les points du plan ont la même composante selon N
+	double D = - N * a;
+	
+	//compPos + D = distance du plan à l'origine du point
+	double t = - (compPos + D) / compDir;
+	
+	//Si l'objet est derrière le rayon
+	if (t < 0){
+		return false;
+	}
+	
+	Vec3 p = ray.origine + t * ray.direction;
+	
+	Vec3 ap = p - a;
+	
+	//Aire du triangle sans recalculer sqrt pour la norme du produit vectoriel
+	double aireTriangle = N * ((b - a) ^ (c - a));
+	
+	double aireABP = (ab ^ ap) * N;
+	double aireAPC = (ap ^ ac) * N;
+	
+	double coefC = aireABP / aireTriangle;
+	double coefB = aireAPC / aireTriangle;
+	
+	if (coefB + coefC <= 1.
+		&&
+		(coefB <= 1. && coefB >= 0.)
+		&&
+		(coefC >= 0. && coefC <= 1.)){
+		
+		inter.t = t;
+		inter.pos = p;
+		inter.fromDir = -ray.direction;
+		inter.obj = this;
+		
+		Vec3 na = smoothNormales[faces[3*i]]; //normales[normalesFace[3*i]]; //
+		Vec3 nb = smoothNormales[faces[3*i + 1]]; //normales[normalesFace[3*i + 1]]; //
+		Vec3 nc = smoothNormales[faces[3*i + 2]]; //normales[normalesFace[3*i + 2]]; //
+		
+		inter.norm = normalInterpol(coefB, coefC, na, nb, nc);
+		return true;
+		
+	}
+	
+	return false;
+	
+#endif
+	
 }
 
-
+//Moller Trumbore Algorithm code adapted from Jean-Claude Iehl code
+//Alternative code derived from intersection equation solving
 bool Mesh::intersectTriangle(const Ray &ray, int i) const {
 	
-	const Vec3& a = sommets[i*3];
-	const Vec3& b = sommets[i*3+1];
-	const Vec3& c = sommets[i*3+2];
+	const Vec3& a = sommets[faces[i*3]];
+	const Vec3& b = sommets[faces[i*3+1]];
+	const Vec3& c = sommets[faces[i*3+2]];
+	
+#ifdef MOLLER_TRUMBORE
 	/* begin calculating determinant - also used to calculate U parameter */
 	Vec3 ac = c - a;
 	Vec3 pvec = ray.direction ^ ac;
@@ -186,6 +270,63 @@ bool Mesh::intersectTriangle(const Ray &ray, int i) const {
 	
 	// ne renvoie vrai que si l'intersection est valide (comprise entre tmin et tmax du rayon)
 	return true;
+#else
+	
+	
+	Vec3 ab = b - a;
+	Vec3 ac = c - a;
+	
+	//Normale au plan du triangle
+	Vec3 N = normalize(ab ^ ac);
+	
+	//Composante du rayon selon la normale
+	double compDir = N * ray.direction;
+	
+	if (compDir == 0.){
+		return false;
+	}
+	
+	//Composante de l'origine du rayon selon la normale
+	double compPos = N * ray.origine;
+	
+	//Distance entre le plan et (0,0,0)
+	// N est la normale au plan donc tous les points du plan ont la même composante selon N
+	double D = - N * a;
+	
+	//compPos + D = distance du plan à l'origine du point
+	double t = - (compPos + D) / compDir;
+	
+	//Si l'objet est derrière le rayon
+	if (t < 0){
+		return false;
+	}
+	
+	Vec3 p = ray.origine + t * ray.direction;
+	
+	Vec3 ap = p - a;
+	
+	//Aire du triangle sans recalculer sqrt pour la norme du produit vectoriel
+	double aireTriangle = N * ((b - a) ^ (c - a));
+	
+	double aireABP = (ab ^ ap) * N;
+	double aireAPC = (ap ^ ac) * N;
+	
+	double coefC = aireABP / aireTriangle;
+	double coefB = aireAPC / aireTriangle;
+	
+	if (coefB + coefC <= 1.
+		&&
+		(coefB <= 1. && coefB >= 0.)
+		&&
+		(coefC >= 0. && coefC <= 1.)){
+		
+		return true;
+		
+	}
+	
+	return false;
+	
+#endif
 }
 
 

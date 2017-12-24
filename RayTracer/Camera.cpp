@@ -48,8 +48,8 @@ Ray Camera::cast_Ray(int i, int j) const{
 		
 		double frontFactor = std::sqrt(-2. * log(x));
 		
-		dDecalPixel.x += frontFactor * std::cos(2. * M_PI * y) * 0.25;
-		dDecalPixel.y += frontFactor * std::sin(2. * M_PI * y) * 0.25;
+		dDecalPixel.x += frontFactor * std::cos(2. * M_PI * y) * 0.5;
+		dDecalPixel.y += frontFactor * std::sin(2. * M_PI * y) * 0.5;
 		/* Rejective method Supposed faster but mean result same and greater std
 		double x, y, s;
 		do {

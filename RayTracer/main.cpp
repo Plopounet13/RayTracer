@@ -51,7 +51,7 @@ int main(int argc, const char * argv[]) {
 	sommets[1] = Vec3(10., 10., 20.);
 	sommets[2] = Vec3(-10., 10., 20.);
 	std::vector<Vec3> normales(1);
-	normales[0] = Vec3(0., 0., 1.);
+	normales[0] = normalize((sommets[1]-sommets[0])^(sommets[2]-sommets[0]));
 	std::vector<int> faces(3);
 	faces[0] = 0;
 	faces[1] = 1;
@@ -60,7 +60,7 @@ int main(int argc, const char * argv[]) {
 	normFace[0] = 0;
 	normFace[1] = 0;
 	normFace[2] = 0;
-
+	
 	obj.push_back(new Mesh(sommets, normales, faces, normFace, new DiffuseMat(Vec3(.9, .9, .9))));*/
 	//obj.push_back(new Mesh("DeerNormals.obj", 0.05, Vec3(0, -10, 20), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.8, .8, .8))));
 	
@@ -73,7 +73,7 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	s.render("../test.png", 100, 0);
+	s.render("../test.png", 100, 2);
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
