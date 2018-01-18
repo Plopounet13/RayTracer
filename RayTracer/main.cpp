@@ -30,7 +30,7 @@ int main(int argc, const char * argv[]) {
 	engine.seed((unsigned int)clock());
 	
 	Camera c(Vec3(0, 0, 55), Vec3(0, 0, -1), Vec3(0, 1, 0), 600, 480);
-	c.antiAliazing = true;
+	c.antiAliazing = false;
 	
 	std::vector<Object*> obj;
 	obj.push_back(new Sphere(Vec3(0, 0, -1060), 1000, new DiffuseMat(Vec3(0., 0.2, 0.))));
@@ -73,7 +73,7 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	s.render("../test.png", 100, 2);
+	s.render("../test.png", 1, 0);
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
