@@ -31,12 +31,14 @@ public:
 	Scene(const std::vector<Light>& l, const std::vector<Object*>& o, const Camera& cam, const Vec3& sky);
 	~Scene();
 	
-	bool intersect(const Ray& r) const;
-	bool intersect(const Ray& r, Intersection& inter) const;
+	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
+	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
 	
 	Vec3 getCol(const Ray& r, bool indirect, int nbRecur) const;
+	Vec3 getAO(const Ray& r, int nbRay) const;
 	
 	void render(std::string filename, int nbRay, int nbRecur = NB_RECUR) const;
+	void renderAO(std::string filename, int nbRay) const;
 };
 
 #endif /* Scene_hpp */

@@ -1,5 +1,5 @@
 EXEC=renderer
-FILES = main Camera Image Intersection Light Material Object Ray Scene Sphere utilities Vec3 Mesh
+FILES = main Camera Image Intersection Light Material Object Ray Scene Sphere utilities Vec3 Mesh BBox BVH
 OBJECTS=$(FILES:=.o)
 CXXFLAGS=-O3 -std=c++11 -Wall -fopenmp
 OTHER_LDFLAGS = -L/usr/local/opt/llvm/lib -I/usr/local/opt/llvm/include -fopenmp

@@ -9,6 +9,7 @@
 #ifndef Object_hpp
 #define Object_hpp
 
+#include <cfloat>
 #include "Material.hpp"
 #include "Ray.hpp"
 #include "Intersection.hpp"
@@ -21,8 +22,8 @@ public:
 	Object();
 	Object(Material* mat);
 	virtual ~Object();
-	virtual bool intersect(const Ray& r) const = 0;
-	virtual bool intersect(const Ray& r, Intersection& inter) const  = 0;
+	virtual bool intersect(const Ray& r, double tmax = DBL_MAX) const = 0;
+	virtual bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const  = 0;
 	virtual Vec3 getCol(const Scene& s, const Intersection& inter, bool indirect, int nbRecur) const;
 };
 

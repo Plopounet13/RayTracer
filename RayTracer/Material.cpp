@@ -39,6 +39,8 @@ Vec3 DiffuseMat::getCol(const Scene& s, const Intersection& inter, bool indirect
 		Intersection interTmp;
 		if (! s.intersect(versLight, interTmp) || interTmp.t > lightT){
 			col += std::abs(inter.norm * lightDir) * l.col;
+		} else {
+			col += Vec3(0.3, 0, 0);
 		}
 	}
 	

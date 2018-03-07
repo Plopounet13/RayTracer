@@ -18,7 +18,7 @@ Sphere::Sphere(const Vec3& c, double r, Material* m):Object(m){
 	radius = r;
 }
 
-bool Sphere::intersect(const Ray& r) const{
+bool Sphere::intersect(const Ray& r, double tmax) const{
 	
 	Vec3 CO = r.origine - center;
 	
@@ -27,13 +27,15 @@ bool Sphere::intersect(const Ray& r) const{
 	
 	double delta = b * b - 4 * c;
 	
-	//double t1 = (- b - sqrt(delta)) / 2;
+	double t1 = (- b - sqrt(delta)) / 2;
 	double t2 = (- b + sqrt(delta)) / 2;
-	return delta >= 0 && t2 >= 0;
+	double t = (t1 >= 0) ? t1 : t2;
+	
+	return delta >= 0 && t >= 0 && t < tmax;
 }
 
 
-bool Sphere::intersect(const Ray& r, Intersection& inter) const{
+bool Sphere::intersect(const Ray& r, Intersection& inter, double tmax) const{
 	
 	Vec3 CO = r.origine - center;
 	
@@ -57,7 +59,7 @@ bool Sphere::intersect(const Ray& r, Intersection& inter) const{
 	inter.norm.normalize();
 	inter.obj = this;
 	inter.fromDir = -r.direction;
-	return delta >= 0 && t2 >= 0;
+	return delta >= 0 && inter.t >= 0 && inter.t < tmax;
 }
 
 

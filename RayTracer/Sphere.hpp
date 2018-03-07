@@ -23,8 +23,8 @@ public:
 	Sphere();
 	Sphere(const Vec3& c, double r, Material* m);
 	
-	bool intersect(const Ray& r) const;
-	bool intersect(const Ray& r, Intersection& inter) const;
+	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
+	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
 };
 
 #endif /* Sphere_hpp */

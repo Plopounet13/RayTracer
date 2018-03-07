@@ -20,7 +20,6 @@
 #include "Material.hpp"
 #include "Scene.hpp"
 #include "Mesh.hpp"
-
 #include "utilities.hpp"
 
 std::default_random_engine engine;
@@ -29,11 +28,11 @@ int main(int argc, const char * argv[]) {
 	
 	engine.seed((unsigned int)clock());
 	
-	Camera c(Vec3(0, 0, 55), Vec3(0, 0, -1), Vec3(0, 1, 0), 600, 480);
+	Camera c(Vec3(0, 0, 3), Vec3(0, 0, -1), Vec3(0, 1, 0), 600, 480);
 	c.antiAliazing = false;
 	
 	std::vector<Object*> obj;
-	obj.push_back(new Sphere(Vec3(0, 0, -1060), 1000, new DiffuseMat(Vec3(0., 0.2, 0.))));
+	/*obj.push_back(new Sphere(Vec3(0, 0, -1060), 1000, new DiffuseMat(Vec3(0., 0.2, 0.))));
 	
 	obj.push_back(new Sphere(Vec3(0, -1010, 0), 1000, new DiffuseMat(Vec3(0.07, 0.07, 0.5))));
 	
@@ -45,27 +44,11 @@ int main(int argc, const char * argv[]) {
 	
 	obj.push_back(new Sphere(Vec3(-1060, 0, 0), 1000, new DiffuseMat(Vec3(0.2, 0., 0.2))));
 	
-	obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new SpecularMat(Vec3(0.4, 0.4, 0.4), Vec3(0.2, 0.2, 0.2))));
-	/*std::vector<Vec3> sommets(3);
-	sommets[0] = Vec3(0., -10., 20.);
-	sommets[1] = Vec3(10., 10., 20.);
-	sommets[2] = Vec3(-10., 10., 20.);
-	std::vector<Vec3> normales(1);
-	normales[0] = normalize((sommets[1]-sommets[0])^(sommets[2]-sommets[0]));
-	std::vector<int> faces(3);
-	faces[0] = 0;
-	faces[1] = 1;
-	faces[2] = 2;
-	std::vector<int> normFace(3);
-	normFace[0] = 0;
-	normFace[1] = 0;
-	normFace[2] = 0;
-	
-	obj.push_back(new Mesh(sommets, normales, faces, normFace, new DiffuseMat(Vec3(.9, .9, .9))));*/
-	//obj.push_back(new Mesh("DeerNormals.obj", 0.05, Vec3(0, -10, 20), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.8, .8, .8))));
+	obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new SpecularMat(Vec3(0.4, 0.4, 0.4), Vec3(0.2, 0.2, 0.2))));*/
+	obj.push_back(new Mesh("Cornell.obj", 1., Vec3(0, -1, 0), Vec3(1., 0., 0.), Vec3(0., 1., 0.), Vec3(0., 0., 1.), new DiffuseMat(Vec3(.8, .8, .8))));
 	
 	std::vector<Light> l;
-	l.emplace_back(Vec3(-10, 20, 40), Vec3(1.5, 1.5, 1.5));
+	l.emplace_back(Vec3(0, 0, 3), Vec3(1.5, 1.5, 1.5));
 /*	l.emplace_back(Vec3(-20, 20, 35), Vec3(0., 1., 0.));
 	l.emplace_back(Vec3(0, -20, 35), Vec3(0., 0., 1.)); */
 	
@@ -73,7 +56,9 @@ int main(int argc, const char * argv[]) {
 	
 	Scene s(l, obj, c, sky);
 	
-	s.render("../test.png", 1, 0);
+	//s.render("../test.png", 1, 0);
+	s.renderAO("../test.png", 32);
+	
 	/*
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
