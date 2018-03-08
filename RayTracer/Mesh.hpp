@@ -21,6 +21,7 @@ class Mesh : public Object{
 	std::vector<int> faces;
 	std::vector<int> normalesFace;
 	std::vector<Vec3> smoothNormales;
+	std::vector<std::pair<double, double>> UVs;
 	
 	BVH m_bvh;
 	

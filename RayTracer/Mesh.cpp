@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "Mesh.hpp"
+#include "tiny_obj_loader.h"
 
 #define EPSILON 0.001
 //Comment to use naive intersectin computation
@@ -30,6 +31,20 @@ Mesh::Mesh(const std::vector<Vec3>& sommets, const std::vector<Vec3>& normales, 
 	for (auto& n:smoothNormales){
 		n.normalize();
 	}
+}
+
+int readIndex(std::istream& buff, const char sep){
+	
+	int res;
+	std::string ind;
+	getline(buff, ind, sep);
+	if (!buff.fail()){
+		res = atoi(ind.c_str()) - 1;
+	} else {
+		res = -1;
+	}
+	return res;
+	
 }
 
 void Mesh::readFromObj(const std::string& filename){
@@ -66,36 +81,42 @@ void Mesh::readFromObj(const std::string& filename){
 				maxz = z;
 			
 		} else if (first == "vn"){
+			
 			double x,y,z;
 			line >> x >> y >> z;
 			normales.emplace_back(x, y, z);
+			
+		} else if (first == "vt"){
+			
+			double u, v;
+			line >> u >> v;
+			UVs.emplace_back(u, v);
+			
 		} else if (first == "f"){
-			int centre, ncentre;
+			int centre, ncentre, uvCentre;
 			std::string v, ind;
 			line >> v;
 			std::istringstream buff(v);
-			getline(buff, ind, '/');
-			centre = atoi(ind.c_str()) - 1;
-			getline(buff, ind, '/');
-			getline(buff, ind);
-			ncentre = atoi(ind.c_str()) - 1;
 			
-			int pred, npred;
+			centre  = readIndex(buff, '/');
+			uvCentre = readIndex(buff, '/');
+			ncentre = readIndex(buff, '/');
+			
+			int pred, uvPred, npred;
 			line >> v;
 			buff = std::istringstream(v);
-			getline(buff, ind, '/');
-			pred = atoi(ind.c_str()) - 1;
-			getline(buff, ind, '/');
-			getline(buff, ind);
-			npred = atoi(ind.c_str()) - 1;
+			
+			pred = readIndex(buff, '/');
+			uvPred = readIndex(buff, '/');
+			npred = readIndex(buff, '/');
+			
 			while (line >> v){
-				int act, nact;
+				int act, uvAct, nact;
 				buff = std::istringstream(v);
-				getline(buff, ind, '/');
-				act = atoi(ind.c_str()) - 1;
-				getline(buff, ind, '/');
-				getline(buff, ind);
-				nact = atoi(ind.c_str()) - 1;
+				
+				act = readIndex(buff, '/');
+				uvAct = readIndex(buff, '/');
+				nact = readIndex(buff, '/');
 				
 				faces.push_back(centre);
 				faces.push_back(pred);

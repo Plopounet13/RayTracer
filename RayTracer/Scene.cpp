@@ -170,7 +170,7 @@ Vec3 Scene::getAO(const Ray& r, int nbRay) const{
 		dir.z = sin(2. * M_PI * r1) * msqrt;
 		dir.y = r2;
 		//M_PI ? Non
-		weight = dir.y * 1. * 2;
+		weight = dir.y * 2.;
 		
 		dir = x * dir.x + y * dir.y + z * dir.z;
 #endif
