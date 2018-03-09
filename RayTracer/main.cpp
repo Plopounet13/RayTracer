@@ -26,6 +26,11 @@ std::default_random_engine engine;
 
 int main(int argc, const char * argv[]) {
 	
+	if (argc != 2){
+		std::cerr << "Usage: " << argv[0] << " SceneFile" << std::endl;
+		exit(1);
+	}
+	
 	engine.seed((unsigned int)clock());
 	
 	Camera c(Vec3(0, 0, 3), Vec3(0, 0, -1), Vec3(0, 1, 0), 600, 480);
@@ -45,7 +50,7 @@ int main(int argc, const char * argv[]) {
 	obj.push_back(new Sphere(Vec3(-1060, 0, 0), 1000, new DiffuseMat(Vec3(0.2, 0., 0.2))));
 	
 	obj.push_back(new Sphere(Vec3(0, 0, 20), 10, new SpecularMat(Vec3(0.4, 0.4, 0.4), Vec3(0.2, 0.2, 0.2))));*/
-	obj.push_back(new Mesh("Cornell.obj", 1., Vec3(0, -1, 0), Vec3(1., 0., 0.), Vec3(0., 1., 0.), Vec3(0., 0., 1.), new DiffuseMat(Vec3(.8, .8, .8))));
+	obj.push_back(new Mesh(argv[1], 1., Vec3(0, -1, 0), Vec3(1., 0., 0.), Vec3(0., 1., 0.), Vec3(0., 0., 1.), new DiffuseMat(Vec3(.8, .8, .8))));
 	
 	std::vector<Light> l;
 	l.emplace_back(Vec3(0, 0, 3), Vec3(1.5, 1.5, 1.5));
@@ -57,7 +62,7 @@ int main(int argc, const char * argv[]) {
 	Scene s(l, obj, c, sky);
 	
 	//s.render("../test.png", 1, 0);
-	s.renderAO("../test.png", 32);
+	s.renderAO("../test.png", 0);
 	
 	/*
 	for (int j = 0; j < c.height; ++j){

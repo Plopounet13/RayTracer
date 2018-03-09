@@ -6,6 +6,7 @@
 //  Copyright © 2018 Loïs Paulin. All rights reserved.
 //
 
+#include <algorithm>
 #include "BVH.hpp"
 #include "Mesh.hpp"
 
