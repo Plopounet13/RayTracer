@@ -15,7 +15,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-#define EPSILON 0.001
+#define EPSILON 0.00000001
 //Comment to use naive intersectin computation
 #define MOLLER_TRUMBORE
 //Comment to use face normals instead of smooth ones
@@ -68,7 +68,7 @@ void Mesh::readFromObj(const std::string& filename){
 	}
 	
 	normals.resize(att.normals.size() / 3);
-	for (int i = 0; i < vertices.size(); ++i){
+	for (int i = 0; i < normals.size(); ++i){
 		normals[i].x = att.normals[i*3 + 0];
 		normals[i].y = att.normals[i*3 + 1];
 		normals[i].z = att.normals[i*3 + 2];
@@ -112,97 +112,6 @@ void Mesh::readFromObj(const std::string& filename){
 	double resize = 2. / std::max(std::max(lx, ly), lz);
 	for (auto& p : vertices)
 		p *= resize;
-	/*
-	
-	std::ifstream in(filename);
-	std::string s;
-	
-	double  minx = DBL_MAX,
-			miny = DBL_MAX,
-			minz = DBL_MAX;
-	double  maxx = -DBL_MAX,
-			maxy = -DBL_MAX,
-			maxz = -DBL_MAX;
-	while(getline(in, s)){
-		std::istringstream line(s);
-		std::string first;
-		line >> first;
-		if (first == "v"){
-			double x,y,z;
-			line >> x >> y >> z;
-			vertices.emplace_back(x, y, z);
-			if (x < minx)
-				minx = x;
-			else if (x > maxx)
-				maxx = x;
-			
-			if (y < miny)
-				miny = y;
-			else if (y > miny)
-				maxy = y;
-			
-			if (z <	minz)
-				minz = z;
-			else if (z > minz)
-				maxz = z;
-			
-		} else if (first == "vn"){
-			
-			double x,y,z;
-			line >> x >> y >> z;
-			normals.emplace_back(x, y, z);
-			
-		} else if (first == "vt"){
-			
-			double u, v;
-			line >> u >> v;
-			UVs.emplace_back(u, v);
-			
-		} else if (first == "f"){
-			int centre, ncentre, uvCentre;
-			std::string v, ind;
-			line >> v;
-			std::istringstream buff(v);
-			
-			centre  = readIndex(buff, '/');
-			uvCentre = readIndex(buff, '/');
-			ncentre = readIndex(buff, '/');
-			
-			int pred, uvPred, npred;
-			line >> v;
-			buff = std::istringstream(v);
-			
-			pred = readIndex(buff, '/');
-			uvPred = readIndex(buff, '/');
-			npred = readIndex(buff, '/');
-			
-			while (line >> v){
-				int act, uvAct, nact;
-				buff = std::istringstream(v);
-				
-				act = readIndex(buff, '/');
-				uvAct = readIndex(buff, '/');
-				nact = readIndex(buff, '/');
-				
-				faces.push_back(centre);
-				faces.push_back(pred);
-				faces.push_back(act);
-				normalsFace.push_back(ncentre);
-				normalsFace.push_back(npred);
-				normalsFace.push_back(nact);
-				pred = act;
-				npred = nact;
-			}
-		}
-	}
-	double lx,ly,lz;
-	lx = maxx - minx;
-	ly = maxy - miny;
-	lz = maxz - minz;
-	double resize = 2. / std::max(std::max(lx, ly), lz);
-	for (auto& p : vertices){
-		p *= resize;
-	}*/
 	
 	
 	

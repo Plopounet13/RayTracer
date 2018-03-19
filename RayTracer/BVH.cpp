@@ -10,7 +10,7 @@
 #include "BVH.hpp"
 #include "Mesh.hpp"
 
-#define MY_EPS 0.0001
+#define MY_EPS 0.00001
 
 struct predicat
 {
