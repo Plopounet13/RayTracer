@@ -34,11 +34,11 @@ int main(int argc, const char * argv[]) {
 	engine.seed((unsigned int)clock());
 	
 	Camera c(Vec3(0, 0, 3), Vec3(0, 0, -1), Vec3(0, 1, 0), 1000, 800);
-	c.antiAliazing = false;
+	c.antiAliazing = true;
 	
 	std::vector<Object*> obj;
 	
-	obj.push_back(new Mesh(argv[1], 1., Vec3(0, -1, 0), Vec3(1., 0., 0.), Vec3(0., 1., 0.), Vec3(0., 0., 1.), new DiffuseMat(Vec3(.8, .8, .8))));
+	obj.push_back(new Mesh(argv[1], 1., Vec3(0, -1, 0), Vec3(0., 0., -1.), Vec3(0., 1., 0.), Vec3(1., 0., 0.), new DiffuseMat(Vec3(.8, .8, .8))));
 	
 	std::vector<Light> l;
 	l.emplace_back(Vec3(0, 0, 3), Vec3(1.5, 1.5, 1.5));
@@ -50,7 +50,7 @@ int main(int argc, const char * argv[]) {
 	Scene s(l, obj, c, sky);
 	
 	//s.render("../test.png", 1, 0);
-	s.renderAO("../test.png", 32);
+	s.renderAO("../test.png", 32, 1);
 	
 	
 }

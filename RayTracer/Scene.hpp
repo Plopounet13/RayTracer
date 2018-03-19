@@ -38,7 +38,7 @@ public:
 	Vec3 getAO(const Ray& r, int nbRay) const;
 	
 	void render(std::string filename, int nbRay, int nbRecur = NB_RECUR) const;
-	void renderAO(std::string filename, int nbRay) const;
+	void renderAO(std::string filename, int nbAA, int nbRay) const;
 };
 
 #endif /* Scene_hpp */

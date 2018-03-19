@@ -14,10 +14,10 @@
 #include "Scene.hpp"
 
 //Comment to use random directions to sample AO
-#define FIBO_AO
+//#define FIBO_AO
 //Comment to stop randomly rotating sampling base
-#define TILTED_BASE
-//#define DIFF_AO
+//#define TILTED_BASE
+#define DIFF_AO
 
 #define MYEPS 0.001
 #define PHI 1.61803398875
@@ -187,18 +187,21 @@ Vec3 Scene::getAO(const Ray& r, int nbRay) const{
 	return Vec3(total, total, total);
 }
 
-void Scene::renderAO(std::string filename, int nbRay) const{
+void Scene::renderAO(std::string filename, int nbAA, int nbRay) const{
 	Image im(c.width, c.height);
 	
 #pragma omp parallel for schedule(dynamic, 16)
 	for (int j = 0; j < c.height; ++j){
 		for (int i = 0; i < c.width; ++i){
-			Vec3 col;
+			Vec3 col(0.,0.,0.);
 			
-			Ray r = c.cast_Ray(i, j);
+			for (int a = 0; a < nbAA; ++a){
+				Ray r = c.cast_Ray(i, j);
 			
-			col = getAO(r, nbRay);
-			//col = Vec3(float(i) / c.width, float(j) / c.height, 0);
+				col += getAO(r, nbRay);
+				//col = Vec3(float(i) / c.width, float(j) / c.height, 0);
+			}
+			col /= nbAA;
 			
 			im.store(i, j, col);
 		}
