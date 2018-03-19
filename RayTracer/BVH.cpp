@@ -87,12 +87,12 @@ BVH::BVH(){
 	racine = -1;
 }
 
-BVH::BVH(const std::vector<int>& faces, const std::vector<Vec3>& sommets, Mesh* m){
+BVH::BVH(const std::vector<indices>& faces, const std::vector<Vec3>& vertices, Mesh* m){
 	mesh = m;
 	primitives.reserve(faces.size() / 3);
 	
 	for (int i = 0; i < faces.size() / 3; ++i){
-		primitives.emplace_back(sommets[faces[3*i+0]], sommets[faces[3*i+1]], sommets[faces[3*i+2]], i);
+		primitives.emplace_back(vertices[faces[3*i+0].vertex], vertices[faces[3*i+1].vertex], vertices[faces[3*i+2].vertex], i);
 	}
 	
 	racine = build_node(0, int(primitives.size()));

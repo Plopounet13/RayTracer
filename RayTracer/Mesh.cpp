@@ -9,7 +9,10 @@
 #include <cfloat>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include "Mesh.hpp"
+#define TINYOBJLOADER_USE_DOUBLE
+#define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
 #define EPSILON 0.001
@@ -22,13 +25,13 @@
 
 Mesh::Mesh(){}
 
-Mesh::Mesh(const std::vector<Vec3>& sommets, const std::vector<Vec3>& normales, const std::vector<int>& faces, const std::vector<int>& normalesFace, Material* m) :Object(m), sommets(sommets), normales(normales), faces(faces), normalesFace(normalesFace), m_bvh(faces, sommets, this){
+Mesh::Mesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals, const std::vector<indices>& faces, Material* m) :Object(m), vertices(vertices), normals(normals), faces(faces), m_bvh(faces, vertices, this){
 	
-	smoothNormales.resize(sommets.size());
-	for (int i = 0; i < normalesFace.size(); ++i){
-		smoothNormales[faces[i]] += normales[normalesFace[i]];
+	smoothnormals.resize(vertices.size());
+	for (int i = 0; i < faces.size(); ++i){
+		smoothnormals[faces[i].vertex] += normals[faces[i].normal];
 	}
-	for (auto& n:smoothNormales){
+	for (auto& n:smoothnormals){
 		n.normalize();
 	}
 }
@@ -48,6 +51,69 @@ int readIndex(std::istream& buff, const char sep){
 }
 
 void Mesh::readFromObj(const std::string& filename){
+	
+	tinyobj::attrib_t att;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> mats;
+	std::string err;
+	
+	if ( !tinyobj::LoadObj(&att, &shapes, &mats, &err, filename.c_str()) )
+		std::cerr << err << std::endl;
+	
+	vertices.resize(att.vertices.size() / 3);
+	for (int i = 0; i < vertices.size(); ++i){
+		vertices[i].x = att.vertices[i*3 + 0];
+		vertices[i].y = att.vertices[i*3 + 1];
+		vertices[i].z = att.vertices[i*3 + 2];
+	}
+	
+	normals.resize(att.normals.size() / 3);
+	for (int i = 0; i < vertices.size(); ++i){
+		normals[i].x = att.normals[i*3 + 0];
+		normals[i].y = att.normals[i*3 + 1];
+		normals[i].z = att.normals[i*3 + 2];
+	}
+	texCoords.resize(att.texcoords.size() / 2);
+	for (int i = 0; i < texCoords.size(); ++i){
+		texCoords[i].first = att.texcoords[i*2 + 0];
+		texCoords[i].second = att.texcoords[i*2 + 1];
+	}
+	
+	int totalSize = 0;
+	for (const tinyobj::shape_t& s : shapes)
+		totalSize += s.mesh.indices.size();
+	
+	faces.resize(totalSize);
+	int i = 0;
+	for (const tinyobj::shape_t& s : shapes){
+		for (const tinyobj::index_t& ind : s.mesh.indices){
+			faces[i].vertex = ind.vertex_index;
+			faces[i].normal = ind.normal_index;
+			faces[i++].texCoords = ind.texcoord_index;
+		}
+	}
+	
+	
+	double maxx = -DBL_MAX, minx = DBL_MAX;
+	double maxy = -DBL_MAX, miny = DBL_MAX;
+	double maxz = -DBL_MAX, minz = DBL_MAX;
+	for (auto& p : vertices){
+		maxx = std::max(maxx, p.x);
+		maxy = std::max(maxy, p.y);
+		maxz = std::max(maxz, p.z);
+		minx = std::min(minx, p.x);
+		miny = std::min(miny, p.y);
+		minz = std::min(minz, p.z);
+	}
+	double lx,ly,lz;
+	lx = maxx - minx;
+	ly = maxy - miny;
+	lz = maxz - minz;
+	double resize = 2. / std::max(std::max(lx, ly), lz);
+	for (auto& p : vertices)
+		p *= resize;
+	/*
+	
 	std::ifstream in(filename);
 	std::string s;
 	
@@ -64,7 +130,7 @@ void Mesh::readFromObj(const std::string& filename){
 		if (first == "v"){
 			double x,y,z;
 			line >> x >> y >> z;
-			sommets.emplace_back(x, y, z);
+			vertices.emplace_back(x, y, z);
 			if (x < minx)
 				minx = x;
 			else if (x > maxx)
@@ -84,7 +150,7 @@ void Mesh::readFromObj(const std::string& filename){
 			
 			double x,y,z;
 			line >> x >> y >> z;
-			normales.emplace_back(x, y, z);
+			normals.emplace_back(x, y, z);
 			
 		} else if (first == "vt"){
 			
@@ -121,9 +187,9 @@ void Mesh::readFromObj(const std::string& filename){
 				faces.push_back(centre);
 				faces.push_back(pred);
 				faces.push_back(act);
-				normalesFace.push_back(ncentre);
-				normalesFace.push_back(npred);
-				normalesFace.push_back(nact);
+				normalsFace.push_back(ncentre);
+				normalsFace.push_back(npred);
+				normalsFace.push_back(nact);
 				pred = act;
 				npred = nact;
 			}
@@ -134,9 +200,11 @@ void Mesh::readFromObj(const std::string& filename){
 	ly = maxy - miny;
 	lz = maxz - minz;
 	double resize = 2. / std::max(std::max(lx, ly), lz);
-	for (auto& p : sommets){
+	for (auto& p : vertices){
 		p *= resize;
-	}
+	}*/
+	
+	
 	
 }
 
@@ -145,18 +213,17 @@ Vec3 toWorldBase(const Vec3& pos, const Vec3& X, const Vec3& Y, const Vec3& Z){
 }
 
 void Mesh::recomputeNormals(){
-	normales.clear();
-	normalesFace.clear();
+	normals.clear();
 	
 	for (int i = 0; i < faces.size() / 3; ++i){
-		normalesFace.push_back(i);
-		normalesFace.push_back(i);
-		normalesFace.push_back(i);
-		Vec3& a = sommets[faces[3*i]];
-		Vec3& b = sommets[faces[3*i+1]];
-		Vec3& c = sommets[faces[3*i+2]];
+		faces[i * 3 + 0].normal = i;
+		faces[i * 3 + 1].normal = i;
+		faces[i * 3 + 2].normal = i;
+		Vec3& a = vertices[faces[3*i].vertex];
+		Vec3& b = vertices[faces[3*i+1].vertex];
+		Vec3& c = vertices[faces[3*i+2].vertex];
 		
-		normales.push_back(normalize((b - a) ^ (c - a)));
+		normals.push_back(normalize((b - a) ^ (c - a)));
 	}
 	
 }
@@ -165,28 +232,28 @@ Mesh::Mesh(const std::string& filename, double scale, const Vec3& loc, const Vec
 	
 	readFromObj(filename);
 	
-	for (auto& p : sommets){
+	for (auto& p : vertices){
 		p = toWorldBase(p, newX, newY, newZ);
 		p *= scale;
 		p += loc;
 	}
-	for (auto& n : normales){
+	for (auto& n : normals){
 		n = toWorldBase(n, newX, newY, newZ);
 		n.normalize();
 	}
 	
-	if (normales.size() == 0)
+	if (normals.size() == 0)
 		recomputeNormals();
 	
-	smoothNormales.resize(sommets.size());
-	for (int i = 0; i < normalesFace.size(); ++i){
-		smoothNormales[faces[i]] += normales[normalesFace[i]];
+	smoothnormals.resize(vertices.size());
+	for (int i = 0; i < faces.size(); ++i){
+		smoothnormals[faces[i].vertex] += normals[faces[i].normal];
 	}
-	for (auto& n:smoothNormales){
+	for (auto& n:smoothnormals){
 		n.normalize();
 	}
 	
-	m_bvh = BVH(faces, sommets, this);
+	m_bvh = BVH(faces, vertices, this);
 	
 }
 
@@ -200,9 +267,9 @@ Vec3 normalInterpol(const float u, const float v, const Vec3& na, const Vec3& nb
 //Alternative code derived from intersection equation solving
 bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter, double tmax) const {
 	
-	const Vec3& a = sommets[faces[i*3]];
-	const Vec3& b = sommets[faces[i*3+1]];
-	const Vec3& c = sommets[faces[i*3+2]];
+	const Vec3& a = vertices[faces[i*3].vertex];
+	const Vec3& b = vertices[faces[i*3+1].vertex];
+	const Vec3& c = vertices[faces[i*3+2].vertex];
 
 #ifdef MOLLER_TRUMBORE
 	/* begin calculating determinant - also used to calculate U parameter */
@@ -245,13 +312,13 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter, double 
 	inter.obj = this;
 	
 #ifdef SMOOTH_NORMALS
-	Vec3 na = smoothNormales[faces[3*i]];
-	Vec3 nb = smoothNormales[faces[3*i + 1]];
-	Vec3 nc = smoothNormales[faces[3*i + 2]];
+	Vec3 na = smoothnormals[faces[3*i].vertex];
+	Vec3 nb = smoothnormals[faces[3*i + 1].vertex];
+	Vec3 nc = smoothnormals[faces[3*i + 2].vertex];
 #else
-	Vec3 na = normales[normalesFace[3*i]];
-	Vec3 nb = normales[normalesFace[3*i + 1]];
-	Vec3 nc = normales[normalesFace[3*i + 2]];
+	Vec3 na = normals[faces[3*i].normal];
+	Vec3 nb = normals[faces[3*i + 1].normal];
+	Vec3 nc = normals[faces[3*i + 2].normal];
 #endif
 	
 	inter.norm = normalInterpol(u, v, na, nb, nc);
@@ -263,21 +330,21 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter, double 
 	Vec3 ab = b - a;
 	Vec3 ac = c - a;
 	
-	//Normale au plan du triangle
+	//normal au plan du triangle
 	Vec3 N = normalize(ab ^ ac);
 	
-	//Composante du rayon selon la normale
+	//Composante du rayon selon la normal
 	double compDir = N * ray.direction;
 	
 	if (compDir == 0.){
 		return false;
 	}
 	
-	//Composante de l'origine du rayon selon la normale
+	//Composante de l'origine du rayon selon la normal
 	double compPos = N * ray.origine;
 	
 	//Distance entre le plan et (0,0,0)
-	// N est la normale au plan donc tous les points du plan ont la même composante selon N
+	// N est la normal au plan donc tous les points du plan ont la même composante selon N
 	double D = - N * a;
 	
 	//compPos + D = distance du plan à l'origine du point
@@ -312,9 +379,9 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter, double 
 		inter.fromDir = -ray.direction;
 		inter.obj = this;
 		
-		Vec3 na = smoothNormales[faces[3*i]]; //normales[normalesFace[3*i]]; //
-		Vec3 nb = smoothNormales[faces[3*i + 1]]; //normales[normalesFace[3*i + 1]]; //
-		Vec3 nc = smoothNormales[faces[3*i + 2]]; //normales[normalesFace[3*i + 2]]; //
+		Vec3 na = smoothnormals[faces[3*i]]; //normals[normalsFace[3*i]]; //
+		Vec3 nb = smoothnormals[faces[3*i + 1]]; //normals[normalsFace[3*i + 1]]; //
+		Vec3 nc = smoothnormals[faces[3*i + 2]]; //normals[normalsFace[3*i + 2]]; //
 		
 		inter.norm = normalInterpol(coefB, coefC, na, nb, nc);
 		return true;
@@ -331,9 +398,9 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, Intersection& inter, double 
 //Alternative code derived from intersection equation solving
 bool Mesh::intersectTriangle(const Ray &ray, int i, double tmax) const {
 	
-	const Vec3& a = sommets[faces[i*3]];
-	const Vec3& b = sommets[faces[i*3+1]];
-	const Vec3& c = sommets[faces[i*3+2]];
+	const Vec3& a = vertices[faces[i*3].vertex];
+	const Vec3& b = vertices[faces[i*3+1].vertex];
+	const Vec3& c = vertices[faces[i*3+2].vertex];
 	
 #ifdef MOLLER_TRUMBORE
 	/* begin calculating determinant - also used to calculate U parameter */
@@ -378,21 +445,21 @@ bool Mesh::intersectTriangle(const Ray &ray, int i, double tmax) const {
 	Vec3 ab = b - a;
 	Vec3 ac = c - a;
 	
-	//Normale au plan du triangle
+	//normal au plan du triangle
 	Vec3 N = normalize(ab ^ ac);
 	
-	//Composante du rayon selon la normale
+	//Composante du rayon selon la normal
 	double compDir = N * ray.direction;
 	
 	if (compDir == 0.){
 		return false;
 	}
 	
-	//Composante de l'origine du rayon selon la normale
+	//Composante de l'origine du rayon selon la normal
 	double compPos = N * ray.origine;
 	
 	//Distance entre le plan et (0,0,0)
-	// N est la normale au plan donc tous les points du plan ont la même composante selon N
+	// N est la normal au plan donc tous les points du plan ont la même composante selon N
 	double D = - N * a;
 	
 	//compPos + D = distance du plan à l'origine du point

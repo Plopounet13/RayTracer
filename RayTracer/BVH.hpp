@@ -13,6 +13,7 @@
 #include "BBox.hpp"
 
 class Mesh;
+class indices;
 
 class Node {
 public:
@@ -46,7 +47,7 @@ class BVH {
 	
 public:
 	BVH(); 
-	BVH(const std::vector<int>& faces, const std::vector<Vec3>& sommets, Mesh* m);
+	BVH(const std::vector<indices>& faces, const std::vector<Vec3>& vertices, Mesh* m);
 	
 	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
 	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
