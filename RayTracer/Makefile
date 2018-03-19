@@ -3,7 +3,7 @@ FILES = main Camera Image Intersection Light Material Object Ray Scene Sphere ut
 OBJECTS=$(FILES:=.o)
 CXXFLAGS=-O3 -std=c++14 -Wall -fopenmp
 OTHER_LDFLAGS = -L/usr/local/opt/llvm/lib -I/usr/local/opt/llvm/include -fopenmp
-CXX=/usr/local/opt/llvm/bin/clang++
+CXX=g++
 all: $(EXEC)
 
 renderer: $(OBJECTS)

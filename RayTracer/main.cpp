@@ -26,15 +26,15 @@ std::default_random_engine engine;
 
 int main(int argc, const char * argv[]) {
 	
-	if (argc != 2){
-		std::cerr << "Usage: " << argv[0] << " SceneFile" << std::endl;
+	if (argc != 3){
+		std::cerr << "Usage: " << argv[0] << " SceneFile OutputFile" << std::endl;
 		exit(1);
 	}
 	
 	engine.seed((unsigned int)clock());
 	
-	Camera c(Vec3(0, 0, 3), Vec3(0, 0, -1), Vec3(0, 1, 0), 1000, 800);
-	c.antiAliazing = true;
+	Camera c(Vec3(0, 0, 3), Vec3(0, 0, -1), Vec3(0, 1, 0), 700, 1050);
+	c.antiAliazing = false;
 	
 	std::vector<Object*> obj;
 	
@@ -50,7 +50,7 @@ int main(int argc, const char * argv[]) {
 	Scene s(l, obj, c, sky);
 	
 	//s.render("../test.png", 1, 0);
-	s.renderAO("../test.png", 32, 1);
+	s.renderAO(argv[2], 1, 32);
 	
 	
 }
