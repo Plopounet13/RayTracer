@@ -37,9 +37,11 @@ public:
 	friend Vec3 max(const Vec3& a, const Vec3& b);
 	
 	friend Vec3 operator+ (const Vec3& a, const Vec3& b);
+	friend Vec3 operator+ (const Vec3& a, const double& b);
 	friend Vec3& operator+= (Vec3& a, const Vec3& b);
 	
 	friend Vec3 operator- (const Vec3& a, const Vec3& b);
+	friend Vec3 operator- (const Vec3& a, const double& b);
 	friend const Vec3& operator-= (Vec3& a, const Vec3& b);
 	
 	friend Vec3 operator^ (const Vec3& a, const Vec3& b);

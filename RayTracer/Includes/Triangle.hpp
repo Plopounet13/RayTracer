@@ -10,12 +10,18 @@
 #define Triangle_hpp
 
 #include "Object.hpp"
+#include "Mesh.hpp"
+#include "BBox.hpp"
 
 class Triangle : public Object {
-	int s1, s2, s3;
-	int n1, n2, n3;
+	int ind;
+	Mesh* m;
 	
-	
+public:
+	Triangle(int ind, Mesh* m);
+	BBox getBoundingBox();
+	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
+	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
 };
 
 #endif /* Triangle_hpp */

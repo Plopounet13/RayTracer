@@ -6,8 +6,8 @@
 //  Copyright © 2017 Loïs Paulin. All rights reserved.
 //
 
-#ifndef Triangle_hpp
-#define Triangle_hpp
+#ifndef Mesh_hpp
+#define Mesh_hpp
 
 #include <vector>
 #include <string>
@@ -24,6 +24,7 @@ public:
 };
 
 class Mesh : public Object{
+	friend class Triangle;
 	
 	std::vector<Vec3> vertices;
 	std::vector<Vec3> normals;
@@ -46,6 +47,7 @@ public:
 	
 	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
 	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
+	BBox getBoundingBox() const;
 	
 };
 

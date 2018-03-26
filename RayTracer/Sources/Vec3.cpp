@@ -33,6 +33,10 @@ Vec3 operator+ (const Vec3& a, const Vec3& b){
 	return Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
+Vec3 operator+ (const Vec3& a, const double& b){
+	return Vec3(a.x + b, a.y + b, a.z + b);
+}
+
 Vec3& operator+= (Vec3& a, const Vec3& b){
 	a.x += b.x;
 	a.y += b.y;
@@ -42,6 +46,10 @@ Vec3& operator+= (Vec3& a, const Vec3& b){
 
 Vec3 operator- (const Vec3& a, const Vec3& b){
 	return Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+Vec3 operator- (const Vec3& a, const double& b){
+	return Vec3(a.x - b, a.y - b, a.z - b);
 }
 
 const Vec3& operator-= (Vec3& a, const Vec3& b){

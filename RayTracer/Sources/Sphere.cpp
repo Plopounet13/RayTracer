@@ -63,6 +63,11 @@ bool Sphere::intersect(const Ray& r, Intersection& inter, double tmax) const{
 }
 
 
+BBox Sphere::getBoundingBox() const{
+	
+	return BBox(center - radius, center + radius);
+	
+}
 
 
 

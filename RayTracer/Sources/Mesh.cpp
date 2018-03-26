@@ -36,20 +36,6 @@ Mesh::Mesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals, 
 	}
 }
 
-int readIndex(std::istream& buff, const char sep){
-	
-	int res;
-	std::string ind;
-	getline(buff, ind, sep);
-	if (!buff.fail()){
-		res = atoi(ind.c_str()) - 1;
-	} else {
-		res = -1;
-	}
-	return res;
-	
-}
-
 void Mesh::readFromObj(const std::string& filename){
 	
 	tinyobj::attrib_t att;
@@ -444,4 +430,16 @@ bool Mesh::intersect(const Ray& r, Intersection& inter, double tmax) const{
 	return (inter.t != DBL_MAX);
 	
 #endif
+}
+
+
+BBox Mesh::getBoundingBox() const{
+	BBox b(vertices[0],vertices[0]);
+	
+	for (const Vec3& v : vertices){
+		b.min = min(b.min, v);
+		b.max = max(b.max, v);
+	}
+	
+	return b;
 }

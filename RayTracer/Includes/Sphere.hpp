@@ -14,6 +14,7 @@
 #include "Object.hpp"
 #include "Material.hpp"
 #include "Intersection.hpp"
+#include "BBox.hpp"
 
 class Sphere : public Object{
 public:
@@ -25,6 +26,7 @@ public:
 	
 	bool intersect(const Ray& r, double tmax = DBL_MAX) const;
 	bool intersect(const Ray& r, Intersection& inter, double tmax = DBL_MAX) const;
+	BBox getBoundingBox() const;
 };
 
 #endif /* Sphere_hpp */
